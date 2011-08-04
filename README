@@ -1,0 +1,100 @@
+SIMPER = Solium Infernum MultiPlayer hellpER
+============================================
+
+Is a little python console script intended to minimize drudgery 
+of playing multiplayer "play by email" games of Solium Infernum 
+(http://www.crypticcomet.com/games/SI/Solium_Infernum.html),
+a game of war and intrigue in the underworld.  Buy it!
+
+I'm not in any way related to Cryptic Comet etc.. and if this
+is somehow infringing on them, I'm super-sorry and will take 
+this down.
+
+A. What does SIMPER do?
+=======================
+SIMPER helps with multiplayer games which are hosted on dropbox
+and depends on using the current community-standard folder setup:
+
+\dropbox\GameName
+                 \Turn 55              # or whatever the 
+                                       # current turn 
+                                       # happens to be
+                           \GameNameMain.sav
+                 \Old turns            # can also be 
+                                       # named "Archive"
+                           \Turn 1
+                           \Turn 2     # etc.
+            
+1.  Alerts you when a new turn is available
+2.  Alerts you when a player submitted their turn
+3.  Copies your turn to the dropbox folder, archiving your 
+    save in case you want to replay the turn.    
+4.  Copies new turn to your SI multiplayer saves folder
+5.  Get a list of the turns taken and outputs a report of 
+    who has gone on the current turn
+6.  Copies old turns and archives your turns with orders intact
+
+
+B. What DOESN'T SIMPER do?
+==============================
+1. Absolutely everything except what appears in list A.  Maybe even more!
+2. Handle invitation and setup of a new game
+3. Manage things for the game host
+4. Understand any of the files being moved around
+5. Spyware/malware and all of that. 
+   Don't take my word for it, please do check/fix my code
+
+I'm thinking it would be nice to add 2 and 3.
+Please don't attempt 4, that is sleazy; not to mention 5.
+
+
+D. Requirements
+===============
+
+python (www.python.org)
+
+
+E. How to use SIMPER
+====================
+
+Help:
+> simper.py -h 
+
+The way I am using this at the moment is to create a shortcut
+to SIMPER with the proper command-line for each of my games:
+
+eg. 
+C:\Users\PURPORC\simper.py "C:\Users\PURPORC\dropbox\Dropbox" "C:\Users\PURPORC\Documents\SoliumInfernumGame\MultiPlayerSaves" "Game Dropbox Name" GameNameMain.sav "Old turns" PURPORC.trn
+
+Once started, there are four commands:
+'s' statistics shows facts about the game turns (order of turns submitted, length of turns etc.)
+'u' update (default action) copies the latest save to the SI save directory
+'c' commit (copies) your latest turn file to the current turn's dropbox folder
+'r' replay copies the save from a specified turn (prompted).  
+    If there are archived saves locally, created by SIMPER when committing, 
+    it brings those back because they also contain your orders.
+'q' to quit
+
+
+D. Helping
+==========
+
+This is on GitHub for a reason.
+
+E. Licence
+==========
+
+Copyright (C) 2011  PURPORC
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
