@@ -4,7 +4,7 @@ SIMPER = Solium Infernum MultiPlayer hellpER
 Is a little python console script intended to minimize drudgery 
 of playing multiplayer "play by email" games of Solium Infernum 
 (http://www.crypticcomet.com/games/SI/Solium_Infernum.html),
-a game of war and intrigue in the underworld.  Buy it!
+a game of war and intrigue in the underworld.  Buy that game!
 
 I'm not in any way related to Cryptic Comet etc.. and if this
 is somehow infringing on them, I'm super-sorry and will take 
@@ -41,8 +41,8 @@ B. What DOESN'T SIMPER do?
 2. Handle invitation and setup of a new game
 3. Manage things for the game host
 4. Understand any of the files being moved around
-5. Spyware/malware and all of that. 
-   Don't take my word for it, please do check/fix my code
+5. Install or contain spyware/malware. 
+   Don't take my word for it, please do review/fix my code
 
 I'm thinking it would be nice to add 2 and 3.
 Please don't attempt 4, that is sleazy; not to mention 5.
@@ -66,13 +66,13 @@ to SIMPER with the proper command-line for each of my games:
 eg. 
 C:\Users\PURPORC\simper.py "C:\Users\PURPORC\dropbox\Dropbox" "C:\Users\PURPORC\Documents\SoliumInfernumGame\MultiPlayerSaves" "Game Dropbox Name" GameNameMain.sav "Old turns" PURPORC.trn
 
-Once started, there are four commands:
+Once started, there are five commands:
 's' statistics shows facts about the game turns (order of turns submitted, length of turns etc.)
 'u' update (default action) copies the latest save to the SI save directory
 'c' commit (copies) your latest turn file to the current turn's dropbox folder
 'r' replay copies the save from a specified turn (prompted).  
     If there are archived saves locally, created by SIMPER when committing, 
-    it brings those back because they also contain your orders.
+    it brings those back instead because they also contain your orders.
 'q' to quit
 
 
