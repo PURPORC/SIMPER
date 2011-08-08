@@ -53,12 +53,12 @@ class SoliumInfernumMultiplayerHelper(object):
             self.archive_subdirectory = setup_dict.archive_subdirectory
             self.player_turn_filename = setup_dict.player_turn_filename
         else:
-            self.dropbox = "E:\\private\\Sean\\dropbox\\Dropbox"
-            self.si_multiplayersaves = "C:\\Users\\sean\\Documents\\SoliumInfernumGame\\MultiPlayerSaves"
+            self.dropbox = "C:\\Users\\PURPORC\\dropbox\\Dropbox"
+            self.si_multiplayersaves = "C:\\Users\\PURPORC\\Documents\\SoliumInfernumGame\\MultiPlayerSaves"
             self.game_name = "Downsizest"
             self.game_save_filename = "DownsizestMain.sav"  # can we build that from the game name?
             self.archive_subdirectory = 'Archive'
-            self.player_turn_filename = "Porpoise.trn"
+            self.player_turn_filename = "PURPORC.trn"
                 
         
     @property   
