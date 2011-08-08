@@ -173,6 +173,10 @@ class SoliumInfernumMultiplayerHelper(object):
         
         if interesting_turn:
             self.latest_dirstr = self.archive_directory + os.sep + 'Turn ' + str(interesting_turn)
+            if 'Turn ' + str(interesting_turn) not in os.listdir(self.game_dropbox + self.archive_directory):
+                print "Can't find turn %s directory: '%s'" % (interesting_turn, self.game_dropbox + self.latest_dirstr)
+                return
+                
         
         if self.game_save_filename in os.listdir(self.game_dropbox + self.latest_dirstr):
             print 'found save for turn', max(self.turn_dictionary.keys())
@@ -329,7 +333,7 @@ def do_work(action, properties):
     ''' Process an action.
     '''
     
-    print "action: " , action
+    # print "action: " , action
 
     try:    
         sih = SoliumInfernumMultiplayerHelper(properties)
@@ -339,7 +343,13 @@ def do_work(action, properties):
         elif action == 'c':
             sih.commit()
         elif action == 'r':
-            interesting_turn = int(raw_input("Which turn do you want to load up? "))
+            interesting_turn = 1
+            ri = raw_input("Which turn do you want to load up? ")
+            try:
+                interesting_turn = int(ri)
+            except Exception, e:
+                print "Sorry, I didn't understand %s as a turn number." % ri
+                return
             sih.update(interesting_turn)
         elif action == 's' or action == 'S':
             stats = sih.get_stats()
