@@ -74,7 +74,9 @@ class SoliumInfernumMultiplayerHelper(object):
         return self.dropbox + os.sep + self.game_name + os.sep
       
     def load_known_turn(self):
-        tf = ".known_turn.txt" 
+        ''' Read the saved file which reflects the current turn loaded.
+        '''
+        tf = ".known_turn.txt"
         if tf in os.listdir(self.game_local):
             turn_info_file = open(self.game_local + tf, "r")
             
@@ -82,6 +84,8 @@ class SoliumInfernumMultiplayerHelper(object):
                 self.latest_save_turn_local = turn_info_file.read()
 
     def save_known_turn(self):
+        ''' Record the current turn of the loaded save file.
+        '''
         if not self.latest_save_turn_local == self.latest_dirstr: # avoid rewriting to preserve mtime
             turn_info_file = open(self.game_local + ".known_turn.txt", "w")
             turn_info_file.write(self.latest_dirstr) 
@@ -89,6 +93,8 @@ class SoliumInfernumMultiplayerHelper(object):
 
 
     def common(self):
+        ''' Prime object with the basics.
+        '''
         for d in os.listdir(self.game_dropbox) :
             match = re.match(SoliumInfernumMultiplayerHelper.pat, d)
             if match:
@@ -101,6 +107,8 @@ class SoliumInfernumMultiplayerHelper(object):
         self.load_known_turn()
         
     def get_stats(self):
+        ''' Assemble some statistics about the progress of the game.
+        '''
         
         TurnRecord = namedtuple('TurnRecord', 'turn_dir, last_player, last_player_delay, turn_start, turn_end, turn_ready_for_host, turn_duration_nonhost, turn_duration_host, turn_duration, player_infos')
         PlayerInfo = namedtuple('PlayerInfo', 'player_turn_file, player_turn_end, player_turn_duration')
@@ -165,7 +173,7 @@ class SoliumInfernumMultiplayerHelper(object):
     
     def update(self, interesting_turn=None):
         '''
-        retrieve a turn from the dropbox
+        Retrieve a turn from the dropbox
         
         either the current latest turn or a previous turn
         '''
@@ -200,7 +208,7 @@ class SoliumInfernumMultiplayerHelper(object):
 
     def commit(self):
         '''
-        commit current saved turn to the dropbox
+        Commit current saved turn to the dropbox
          
         check that found latest turn is the same as my current turn
         (by file comparison)
@@ -219,9 +227,13 @@ class SoliumInfernumMultiplayerHelper(object):
 
 
 def do_reprompt():
+    ''' Print the main prompt.
+    '''
     print "\nAction [U]pdate, [c]ommit, [r]eplay, [s]tats, or [q]uit: " ,
 
 def check_thread(q, properties):
+    ''' The thread which keeps an eye on the dropbox for new submissions and turns.
+    '''
     notified = False
     reprompt = False
     last_known_player_turn = None
@@ -252,8 +264,12 @@ def check_thread(q, properties):
             try:
                 lots_of_info = sih.get_stats()
                 current_turn = lots_of_info[max(sih.turn_dictionary.keys())]
+                
+                if current_turn.player_infos:
+                    last_player_info = sorted(current_turn.player_infos, key=lambda x: x.player_turn_end)[-1]
+                    last_player_time = format_timedelta(last_player_info.player_turn_duration)
                 if  last_known_player_turn != current_turn.last_player:
-                    print "\n\nNew turn from %s after %s thinking\n" % (current_turn.last_player.replace(".trn", "") , format_timedelta(current_turn.last_player_delay))
+                    print "\n\n%s New turn from %s. %s after turn available and %s after the previous player.\n" % (datetime.datetime.now().strftime("%H:%M %d/%m") , current_turn.last_player.replace(".trn", "") , last_player_time, format_timedelta(current_turn.last_player_delay))
                     last_known_player_turn = current_turn.last_player
                     reprompt = True
             except Exception, e:
@@ -267,7 +283,8 @@ def check_thread(q, properties):
     
 
 def main_loop(properties):
-    
+    ''' The user-interactive prompt and response
+    '''
     keepGoing = 1
     while keepGoing:
         while 1:
@@ -282,7 +299,7 @@ def main_loop(properties):
                 break
             if action == 'c' or action == 'u' or action == 'r' or action == '' or action == 's' or action == 'S':
                 break
-            print 'Unknown input...'
+            print 'Unknown command...'
         do_work(action, properties)
         
         
@@ -295,6 +312,8 @@ def format_rpad(string_to_format, width, padding_char=" ", wrap_open="", wrap_cl
     return out
 
 def format_timedelta(td):
+    ''' Make timedeltas look sensible for output.
+    '''
     if td == 0:
         return ""
     sec = td.total_seconds()
@@ -333,8 +352,6 @@ def do_work(action, properties):
     ''' Process an action.
     '''
     
-    # print "action: " , action
-
     try:    
         sih = SoliumInfernumMultiplayerHelper(properties)
         
@@ -348,7 +365,7 @@ def do_work(action, properties):
             try:
                 interesting_turn = int(ri)
             except Exception, e:
-                print "Sorry, I didn't understand %s as a turn number." % ri
+                print "Sorry, I didn't understand '%s' as a turn number." % ri
                 return
             sih.update(interesting_turn)
         elif action == 's' or action == 'S':
@@ -362,7 +379,7 @@ def do_work(action, properties):
                                  , "-".join(pi.player_turn_file.replace(".trn", "")  for pi in sorted(tr.player_infos, key=lambda info: info.player_turn_end)) 
                                  ))
             if action == 's':
-                print format_table(output, heads)
+                print "\n" , format_table(output, heads)
             else:        
                 print format_table(output, heads, ",", "", "", "\"", "\"")
     finally:        
@@ -371,24 +388,19 @@ def do_work(action, properties):
 if __name__ == '__main__':
     communication_q = Queue.Queue()
     
-    # self.game_name = kwargs['game_name']
-    # self.game_save_filename = kwargs['game_save_filename']
-    # self.archive_subdirectory = kwargs['archive_subdirectory']
-    # self.player_turn_filename = kwargs['player_turn_filename']
-
     parser = argparse.ArgumentParser(description='SIMPER = Solium Infernum MultiPlayer helpER.')
     parser.add_argument('dropbox',
-                        help='the location of your dropbox folder.  e.g. "E:\\private\\PURPORC\\dropbox\\Dropbox"')
+                        help='the location of your dropbox folder.\ne.g. "C:\\Users\\PURPORC\\dropbox\\Dropbox"')
     parser.add_argument('si_multiplayersaves',
-                        help='the location of your dropbox folder.  e.g. "C:\\Users\\PURPORC\\Documents\\SoliumInfernumGame\\MultiPlayerSaves"')
+                        help='the location of your dropbox folder.\ne.g. "C:\\Users\\PURPORC\\Documents\\SoliumInfernumGame\\MultiPlayerSaves"')
     parser.add_argument('game_name',
-                       help='the name of the game without spaces.  e.g. "Downsizider"')
+                       help='the name of the game without spaces.\ne.g. "Downsizider"')
     parser.add_argument('game_save_filename',
-                       help='Game Turn filename e.g. "DownsiziderMain.sav"')
+                       help='Game Turn filename. e.g. "DownsiziderMain.sav"')
     parser.add_argument('archive_subdirectory',
-                       help='where old turns go to die e.g. "Archive" or "Old Turns"')
+                       help='where old turns go to die\ne.g. "Archive" or "Old Turns"')
     parser.add_argument('player_turn_filename',
-                       help='my save file name.  e.g. "Purporc.trn"')
+                       help='my save file name.\ne.g. "Purporc.trn"')
     
     game_properties = parser.parse_args()
     
@@ -405,9 +417,3 @@ if __name__ == '__main__':
     finally:
         communication_q.put("stop")
     
-            
-        
-        
-            
-            
-            
