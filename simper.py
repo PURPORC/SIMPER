@@ -264,7 +264,7 @@ def check_thread(q, properties):
             try:
                 lots_of_info = sih.get_stats()
                 current_turn = lots_of_info[max(sih.turn_dictionary.keys())]
-                
+                last_player_time = ''
                 if current_turn.player_infos:
                     last_player_info = sorted(current_turn.player_infos, key=lambda x: x.player_turn_end)[-1]
                     last_player_time = format_timedelta(last_player_info.player_turn_duration)
