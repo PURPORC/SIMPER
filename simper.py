@@ -268,7 +268,7 @@ def check_thread(q, properties):
                 if current_turn.player_infos:
                     last_player_info = sorted(current_turn.player_infos, key=lambda x: x.player_turn_end)[-1]
                     last_player_time = format_timedelta(last_player_info.player_turn_duration)
-                if  last_known_player_turn != current_turn.last_player:
+                if  last_player_time and last_known_player_turn != current_turn.last_player:
                     print "\n\n%s New turn from %s. %s after turn available and %s after the previous player.\n" % (datetime.datetime.now().strftime("%H:%M %d/%m") , current_turn.last_player.replace(".trn", "") , last_player_time, format_timedelta(current_turn.last_player_delay))
                     last_known_player_turn = current_turn.last_player
                     reprompt = True
